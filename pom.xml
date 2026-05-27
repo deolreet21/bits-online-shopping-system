@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.4.6</version>
         <relativePath/>
     </parent>
 
@@ -19,6 +19,13 @@
 
     <properties>
         <java.version>17</java.version>
+        <!-- Version overrides to fix critical/high severity CVEs -->
+        <tomcat.version>10.1.55</tomcat.version>
+        <thymeleaf.version>3.1.5.RELEASE</thymeleaf.version>
+        <logback.version>1.5.25</logback.version>
+        <mysql-connector-j.version>8.4.0</mysql-connector-j.version>
+        <json-smart.version>2.5.2</json-smart.version>
+        <assertj.version>3.27.7</assertj.version>
     </properties>
 
     <dependencies>

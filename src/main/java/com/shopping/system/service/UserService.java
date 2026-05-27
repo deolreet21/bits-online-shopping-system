@@ -46,6 +46,7 @@ public class UserService {
     }
 
     public Optional<User> findById(Long id) {
+        if (id == null) return Optional.empty();
         return userRepository.findById(id);
     }
 
