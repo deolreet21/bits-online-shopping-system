@@ -1,8 +1,9 @@
-// Owner: Mehwish | Database & Config | JPA entity for products in the e-Kiosk catalogue
+// Owner: Aliya | Product Management | JPA entity with product details and timestamps
 package com.shopping.system.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -15,32 +16,37 @@ public class Product {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    // Low-stock alert threshold used in admin dashboard is < 5
     @Column(name = "quantity_on_hand", nullable = false)
-    private int quantityOnHand;
+    private Integer quantityOnHand;
 
-    @Column(length = 50)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
 
-    @Column(name = "image_url", length = 255)
-    private String imageUrl;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdDate = LocalDateTime.now();
+        this.updatedDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedDate = LocalDateTime.now();
+    }
 
     public Product() {}
-
-    public Product(String name, String description, BigDecimal price,
-                   int quantityOnHand, String category) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.quantityOnHand = quantityOnHand;
-        this.category = category;
-    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -54,12 +60,15 @@ public class Product {
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
 
-    public int getQuantityOnHand() { return quantityOnHand; }
-    public void setQuantityOnHand(int quantityOnHand) { this.quantityOnHand = quantityOnHand; }
+    public Integer getQuantityOnHand() { return quantityOnHand; }
+    public void setQuantityOnHand(Integer quantityOnHand) { this.quantityOnHand = quantityOnHand; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public LocalDateTime getCreatedDate() { return createdDate; }
+    public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
+
+    public LocalDateTime getUpdatedDate() { return updatedDate; }
+    public void setUpdatedDate(LocalDateTime updatedDate) { this.updatedDate = updatedDate; }
 }
