@@ -58,6 +58,11 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    // Used by CustomerController after profile update — persists changed fields
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
     public long getTotalCustomers() {
         return userRepository.findAll().stream()
                 .filter(u -> u.getRole() == com.shopping.system.entity.UserRole.CUSTOMER)
