@@ -1,0 +1,111 @@
+<!-- Owner: HeenuReet | Product Search & Browse | Full product detail page with Add to Cart form -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${product.name} + ' - e-Kiosk'">Product Detail</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container py-4">
+
+    <!-- Flash messages -->
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i><span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i><span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/products}">Products</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/products/category/{c}(c=${product.category.name()})}"
+                                           th:text="${product.category.displayName}"></a></li>
+            <li class="breadcrumb-item active" th:text="${product.name}"></li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm p-4 text-center">
+                <i class="bi bi-box-seam display-1 text-primary opacity-50"></i>
+                <span class="badge bg-primary mt-3" th:text="${product.category.displayName}"></span>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h2 class="fw-bold" th:text="${product.name}">Product Name</h2>
+
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <span class="display-6 fw-bold text-primary"
+                              th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}"></span>
+                        <span th:class="${product.quantityOnHand > 0 ? 'badge bg-success fs-6' : 'badge bg-danger fs-6'}"
+                              th:text="${product.quantityOnHand > 0 ? 'In Stock' : 'Out of Stock'}"></span>
+                    </div>
+
+                    <p class="text-muted" th:text="${product.description}">Product description here.</p>
+
+                    <table class="table table-borderless table-sm w-auto mb-4">
+                        <tr>
+                            <td class="text-muted pe-3">Category:</td>
+                            <td class="fw-semibold" th:text="${product.category.displayName}"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted pe-3">Available Stock:</td>
+                            <td class="fw-semibold" th:text="${product.quantityOnHand} + ' units'"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted pe-3">Listed On:</td>
+                            <td class="fw-semibold"
+                                th:text="${#temporals.format(product.createdDate, 'dd MMM yyyy')}"></td>
+                        </tr>
+                    </table>
+
+                    <!-- Add to Cart (Customers only) -->
+                    <div th:if="${currentUser.role.name() == 'CUSTOMER'}">
+                        <form th:action="@{/cart/add}" method="post" th:if="${product.quantityOnHand > 0}">
+                            <input type="hidden" name="productId" th:value="${product.id}"/>
+                            <div class="d-flex gap-2 align-items-center">
+                                <div class="input-group" style="max-width: 130px;">
+                                    <span class="input-group-text">Qty</span>
+                                    <input type="number" class="form-control" name="quantity"
+                                           value="1" min="1" th:max="${product.quantityOnHand}"/>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg flex-fill">
+                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                </button>
+                            </div>
+                        </form>
+                        <div th:if="${product.quantityOnHand <= 0}">
+                            <button class="btn btn-secondary btn-lg" disabled>
+                                <i class="bi bi-x-circle me-2"></i>Out of Stock
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a th:href="@{/products}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Products
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
