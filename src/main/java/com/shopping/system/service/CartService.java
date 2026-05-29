@@ -27,6 +27,7 @@ public class CartService {
     @Autowired
     private UserRepository userRepository;
 
+    @SuppressWarnings("null")
     @Transactional
     public Cart getOrCreateCart(Long userId) {
         return cartRepository.findByUserId(userId).orElseGet(() -> {
@@ -37,6 +38,7 @@ public class CartService {
         });
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Cart addToCart(Long userId, Product product, int quantity) {
         Cart cart = getOrCreateCart(userId);
@@ -53,11 +55,13 @@ public class CartService {
         return cartRepository.findById(cart.getId()).orElse(cart);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void removeFromCart(Long cartItemId) {
         cartItemRepository.deleteById(cartItemId);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Cart updateQuantity(Long cartItemId, int quantity) {
         CartItem item = cartItemRepository.findById(cartItemId)

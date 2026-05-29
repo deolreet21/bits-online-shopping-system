@@ -2,7 +2,7 @@
 package com.shopping.system.controller;
 
 import com.shopping.system.entity.User;
-import com.shopping.system.repository.CartItemRepository;
+import com.shopping.system.repository.CartRepository;
 import com.shopping.system.repository.OrderRepository;
 import com.shopping.system.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -18,16 +18,16 @@ public class CustomerController {
 
     private final UserService userService;
     private final OrderRepository orderRepository;
-    private final CartItemRepository cartItemRepository;
+    private final CartRepository cartRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     public CustomerController(UserService userService,
                                OrderRepository orderRepository,
-                               CartItemRepository cartItemRepository,
+                               CartRepository cartRepository,
                                BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.orderRepository = orderRepository;
-        this.cartItemRepository = cartItemRepository;
+        this.cartRepository = cartRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -38,8 +38,10 @@ public class CustomerController {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) return "redirect:/login";
 
-        // Cart count and order count passed as separate model attributes — keeps template logic simple
-        long cartCount = cartItemRepository.countByUser(user);
+        // Cart count via CartRepository — HeenuReet refactored CartItemRepository to use Cart-based lookup
+        long cartCount = cartRepository.findByUser(user)
+                .map(cart -> (long) cart.getCartItems().size())
+                .orElse(0L);
         long orderCount = orderRepository.countByUser(user);
 
         // stream().limit(5).toList() — takes only 5 most recent without loading all orders into memory
