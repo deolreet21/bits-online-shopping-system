@@ -1,0 +1,102 @@
+<!-- Owner: HeenuReet | Ordering | Order confirmation page showing order ID, items, total, and status -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Order Confirmed - e-Kiosk</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+
+            <!-- Success Banner -->
+            <div class="text-center mb-4">
+                <div class="success-checkmark mb-3">
+                    <i class="bi bi-check-circle-fill display-1 text-success"></i>
+                </div>
+                <h2 class="fw-bold text-success">Order Placed Successfully!</h2>
+                <p class="text-muted">Your order has been confirmed and is being processed.</p>
+            </div>
+
+            <!-- Order Details Card -->
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-receipt me-2"></i>
+                            Order <span th:text="'#' + ${order.id}"></span>
+                        </h5>
+                        <span th:class="${'badge fs-6 status-' + order.status.name().toLowerCase()}"
+                              th:text="${order.status}"></span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-2">
+                            <small class="text-muted d-block">Order Date</small>
+                            <span class="fw-semibold"
+                                  th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy, HH:mm')}"></span>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <small class="text-muted d-block">Shipping Address</small>
+                            <span class="fw-semibold" th:text="${order.shippingAddress}"></span>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-semibold border-bottom pb-2 mb-3">Items Ordered</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-borderless">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${order.orderItems}">
+                                    <td th:text="${item.product.name}"></td>
+                                    <td class="text-center" th:text="${item.quantity}"></td>
+                                    <td class="text-end"
+                                        th:text="'$' + ${#numbers.formatDecimal(item.price, 1, 2)}"></td>
+                                    <td class="text-end fw-semibold"
+                                        th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}"></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="border-top">
+                                    <td colspan="3" class="text-end fw-bold">Total:</td>
+                                    <td class="text-end fw-bold text-primary"
+                                        th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3">
+                <a th:href="@{/orders}" class="btn btn-outline-primary">
+                    <i class="bi bi-list-ul me-2"></i>View All Orders
+                </a>
+                <a th:href="@{/products}" class="btn btn-primary">
+                    <i class="bi bi-grid me-2"></i>Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
