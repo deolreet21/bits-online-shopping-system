@@ -42,11 +42,11 @@ public class CustomerController {
         long cartCount = cartRepository.findByUser(user)
                 .map(cart -> (long) cart.getCartItems().size())
                 .orElse(0L);
-        long orderCount = orderRepository.countByUser(user);
+        long orderCount = (long) orderRepository.findByUserId(user.getId()).size();
 
         // stream().limit(5).toList() — takes only 5 most recent without loading all orders into memory
         var recentOrders = orderRepository
-                .findByUserOrderByOrderDateDesc(user)
+                .findByUserIdOrderByOrderDateDesc(user.getId())
                 .stream().limit(5).toList();
 
         model.addAttribute("user", user);

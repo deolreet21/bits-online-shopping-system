@@ -7,7 +7,6 @@ import com.shopping.system.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,12 +38,9 @@ public class DashboardService {
         return userService.getTotalCustomers();
     }
 
-    // Today's revenue: SUM of totalAmount for orders placed since midnight today
+    // Today's revenue: SUM of non-cancelled orders placed today (uses CURRENT_DATE in JPQL)
     public BigDecimal getTodaySales() {
-        LocalDateTime startOfDay = LocalDateTime.now()
-                .withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = LocalDateTime.now();
-        return orderRepository.sumTotalAmountByOrderDateBetween(startOfDay, endOfDay);
+        return orderRepository.findTodaysTotalSales();
     }
 
     // Products with quantityOnHand < 5 — triggers alert badge on admin dashboard

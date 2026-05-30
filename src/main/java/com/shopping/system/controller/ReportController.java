@@ -69,7 +69,7 @@ public class ReportController {
         LocalDateTime start = LocalDateTime.of(from, LocalTime.MIN);
         LocalDateTime end   = LocalDateTime.of(to,   LocalTime.MAX);
 
-        List<Order> orders = orderRepository.findByOrderDateBetween(start, end);
+        List<Order> orders = orderRepository.findOrdersBetweenDates(start, end);
 
         BigDecimal totalRevenue = orders.stream()
                 .map(Order::getTotalAmount)
@@ -108,7 +108,7 @@ public class ReportController {
         // Build CustomerSummary list: filter CUSTOMER role, then map each user to their order count
         List<CustomerSummary> summaries = userRepository.findAll().stream()
                 .filter(u -> u.getRole() == UserRole.CUSTOMER)
-                .map(u -> new CustomerSummary(u, (int) orderRepository.countByUser(u)))
+                .map(u -> new CustomerSummary(u, orderRepository.findByUserId(u.getId()).size()))
                 .toList();
 
         model.addAttribute("summaries",    summaries);
