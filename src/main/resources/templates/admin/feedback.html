@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Feedback — e-Kiosk Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand fw-bold">🛒 e-Kiosk Admin</span>
+    <div class="d-flex gap-3 align-items-center">
+        <a href="/admin/dashboard" class="text-white text-decoration-none">Dashboard</a>
+        <a href="/admin/products"  class="text-white text-decoration-none">Products</a>
+        <a href="/admin/reports"   class="text-white text-decoration-none">Reports</a>
+        <span class="text-white fw-semibold">Feedback</span>
+        <span class="text-white-50" th:text="${currentUser?.username}"></span>
+        <a href="/logout" class="btn btn-sm btn-outline-light">Logout</a>
+    </div>
+</nav>
+
+<div class="container py-4">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Feedback</li>
+        </ol>
+    </nav>
+
+    <h4 class="mb-4 fw-bold">💬 Customer Feedback</h4>
+
+    <!-- Summary count -->
+    <div class="mb-4 text-muted">
+        <span class="fw-semibold" th:text="${feedbackList.size()}">0</span> feedback entries received
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header fw-semibold">All Feedback</div>
+
+        <div th:if="${feedbackList.isEmpty()}" class="p-4 text-center text-muted">
+            No feedback has been submitted yet.
+        </div>
+
+        <div class="table-responsive" th:if="${!feedbackList.isEmpty()}">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th class="text-center">Rating</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="fb : ${feedbackList}">
+                        <!-- #temporals.format is Thymeleaf's built-in date formatter for Java 8 time types -->
+                        <td class="text-nowrap text-muted small"
+                            th:text="${#temporals.format(fb.feedbackDate, 'dd MMM yyyy')}"></td>
+                        <td th:text="${fb.user.username}"></td>
+                        <td>
+                            <span th:if="${fb.product != null}" th:text="${fb.product.name}"></span>
+                            <span th:if="${fb.product == null}" class="text-muted fst-italic">General</span>
+                        </td>
+                        <td class="text-center">
+                            <!--
+                                th:classappend conditionally appends a CSS class without replacing
+                                the existing classes — used here to colour ratings via Bootstrap
+                                text utilities: green (≥4), yellow (3), red (<3)
+                            -->
+                            <span class="fw-bold fs-5"
+                                  th:text="${fb.rating} + '★'"
+                                  th:classappend="${fb.rating >= 4} ? 'text-success'
+                                               : (${fb.rating == 3} ? 'text-warning'
+                                               : 'text-danger')">
+                            </span>
+                        </td>
+                        <td th:text="${fb.comment}" class="text-wrap"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
