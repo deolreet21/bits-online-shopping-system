@@ -4,7 +4,7 @@
 
 PROPS="src/main/resources/application.properties"
 DB_NAME="shopping_system"
-DB_USER="root"
+DB_USER="${DB_USERNAME:-root}"
 SETUP_DONE_FLAG=".setup_done"
 
 # ── Load .env if present ─────────────────────────
@@ -134,7 +134,7 @@ EOF
 fi
 
 # ── 7. Read final credentials ────────────────────
-DB_PASS=$(grep 'spring.datasource.password' "$PROPS" | cut -d'=' -f2 | tr -d ' ')
+DB_PASS="${DB_PASSWORD:-$(grep 'spring.datasource.password' "$PROPS" | cut -d'=' -f2 | tr -d ' ')}"
 
 # ── 8. Create database ───────────────────────────
 if mysql -u "$DB_USER" -p"$DB_PASS" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;" 2>/dev/null; then
