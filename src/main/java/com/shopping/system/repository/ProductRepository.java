@@ -16,7 +16,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameContainingIgnoreCase(String name);
 
     List<Product> findByNameContainingIgnoreCaseAndCategory(String name, Category category);
-
-    // Used by admin dashboard low-stock alert — threshold is a business rule constant (< 5 units)
-    List<Product> findByQuantityOnHandLessThan(int threshold);
 }
