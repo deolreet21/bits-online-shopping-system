@@ -86,12 +86,12 @@ public class OrderService {
     }
 
     public List<Order> getUserOrders(Long userId) {
-        return orderRepository.findByUserIdOrderByOrderDateDesc(userId);
+        return orderRepository.findUserOrdersWithItems(userId);
     }
 
     @SuppressWarnings("null")
     public Optional<Order> getOrderById(Long orderId) {
-        return orderRepository.findById(orderId);
+        return orderRepository.findByIdWithDetails(orderId);
     }
 
     public boolean canCancelOrder(Order order) {
@@ -103,6 +103,6 @@ public class OrderService {
     }
 
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderRepository.findAllOrdersWithItems();
     }
 }
