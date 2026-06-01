@@ -1,0 +1,114 @@
+<!-- Owner: Aliya | Sales Analysis | Admin sales dashboard with period summaries and fast/slow moving products -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <title>Sales Analysis</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container-fluid mt-4 px-4">
+    <h2 class="mb-4">Sales Analysis</h2>
+
+    <!-- Period Sales Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">This Week</h6>
+                    <h3 class="text-primary" th:text="'₹' + ${weeklySales}">₹0.00</h3>
+                    <a href="/admin/sales/weekly" class="btn btn-sm btn-outline-primary mt-2">Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">This Month</h6>
+                    <h3 class="text-success" th:text="'₹' + ${monthlySales}">₹0.00</h3>
+                    <a href="/admin/sales/monthly" class="btn btn-sm btn-outline-success mt-2">Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">This Quarter</h6>
+                    <h3 class="text-warning" th:text="'₹' + ${quarterlySales}">₹0.00</h3>
+                    <a href="/admin/sales/quarterly" class="btn btn-sm btn-outline-warning mt-2">Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-danger h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">This Year</h6>
+                    <h3 class="text-danger" th:text="'₹' + ${yearlySales}">₹0.00</h3>
+                    <a href="/admin/sales/yearly" class="btn btn-sm btn-outline-danger mt-2">Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Fast Moving -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Fast Moving Products</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr><th>Product</th><th>Category</th><th>Units Sold</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(fastMoving)}">
+                                <td colspan="3" class="text-center text-muted py-3">No data yet</td>
+                            </tr>
+                            <tr th:each="item : ${fastMoving}">
+                                <td th:text="${item[0]}"></td>
+                                <td th:text="${item[1]}"></td>
+                                <td><span class="badge bg-success" th:text="${item[2]}"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slow Moving -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Slow Moving Products</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr><th>Product</th><th>Category</th><th>Units Sold</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(slowMoving)}">
+                                <td colspan="3" class="text-center text-muted py-3">No data yet</td>
+                            </tr>
+                            <tr th:each="item : ${slowMoving}">
+                                <td th:text="${item[0]}"></td>
+                                <td th:text="${item[1]}"></td>
+                                <td><span class="badge bg-danger" th:text="${item[2]}"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
