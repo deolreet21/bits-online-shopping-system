@@ -30,11 +30,14 @@ public class CartService {
     @SuppressWarnings("null")
     @Transactional
     public Cart getOrCreateCart(Long userId) {
-        return cartRepository.findByUserId(userId).orElseGet(() -> {
+        // findByUserIdWithItems uses LEFT JOIN FETCH so cart items and products are loaded
+        // eagerly within the transaction — prevents LazyInitializationException in Thymeleaf templates
+        return cartRepository.findByUserIdWithItems(userId).orElseGet(() -> {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
             Cart cart = new Cart(user);
-            return cartRepository.save(cart);
+            cartRepository.save(cart);
+            return cart;
         });
     }
 
@@ -52,7 +55,7 @@ public class CartService {
             cart.getCartItems().add(newItem);
             cartItemRepository.save(newItem);
         }
-        return cartRepository.findById(cart.getId()).orElse(cart);
+        return cartRepository.findByUserIdWithItems(userId).orElse(cart);
     }
 
     @SuppressWarnings("null")
