@@ -38,7 +38,6 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
-    @SuppressWarnings("null")
     private void seedProducts() {
         if (productRepository.count() > 0) return;
 
