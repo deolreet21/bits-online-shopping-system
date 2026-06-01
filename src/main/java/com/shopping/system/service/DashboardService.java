@@ -1,9 +1,12 @@
-// Owner: Mehwish | Admin Dashboard | Aggregates stats for the admin dashboard view
+// Owner: Mehwish | Admin Dashboard | Service for admin dashboard metrics and summaries
 package com.shopping.system.service;
 
+import com.shopping.system.entity.Feedback;
+import com.shopping.system.entity.Order;
 import com.shopping.system.entity.Product;
 import com.shopping.system.repository.OrderRepository;
 import com.shopping.system.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,19 +15,17 @@ import java.util.List;
 @Service
 public class DashboardService {
 
-    private static final int LOW_STOCK_THRESHOLD = 5;
+    @Autowired
+    private ProductRepository productRepository;
 
-    private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
-    private final UserService userService;
+    @Autowired
+    private OrderRepository orderRepository;
 
-    public DashboardService(ProductRepository productRepository,
-                            OrderRepository orderRepository,
-                            UserService userService) {
-        this.productRepository = productRepository;
-        this.orderRepository = orderRepository;
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private FeedbackService feedbackService;
 
     public long getTotalProducts() {
         return productRepository.count();
@@ -38,13 +39,26 @@ public class DashboardService {
         return userService.getTotalCustomers();
     }
 
-    // Today's revenue: SUM of non-cancelled orders placed today (uses CURRENT_DATE in JPQL)
-    public BigDecimal getTodaySales() {
-        return orderRepository.findTodaysTotalSales();
+    public BigDecimal getTodaysSales() {
+        BigDecimal result = orderRepository.findTodaysTotalSales();
+        return result != null ? result : BigDecimal.ZERO;
     }
 
-    // Products with quantityOnHand < 5 — triggers alert badge on admin dashboard
     public List<Product> getLowStockProducts() {
-        return productRepository.findByQuantityOnHandLessThan(LOW_STOCK_THRESHOLD);
+        return productRepository.findAll().stream()
+                .filter(p -> p.getQuantityOnHand() < 5)
+                .toList();
+    }
+
+    public List<Order> getRecentOrders() {
+        return orderRepository.findAll().stream()
+                .sorted((a, b) -> b.getOrderDate().compareTo(a.getOrderDate()))
+                .limit(10)
+                .toList();
+    }
+
+    public List<Feedback> getRecentFeedback() {
+        List<Feedback> all = feedbackService.getAllFeedback();
+        return all.stream().limit(5).toList();
     }
 }

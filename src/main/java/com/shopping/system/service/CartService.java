@@ -27,21 +27,16 @@ public class CartService {
     @Autowired
     private UserRepository userRepository;
 
-    @SuppressWarnings("null")
     @Transactional
     public Cart getOrCreateCart(Long userId) {
-        // findByUserIdWithItems uses LEFT JOIN FETCH so cart items and products are loaded
-        // eagerly within the transaction — prevents LazyInitializationException in Thymeleaf templates
-        return cartRepository.findByUserIdWithItems(userId).orElseGet(() -> {
+        return cartRepository.findByUserId(userId).orElseGet(() -> {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
             Cart cart = new Cart(user);
-            cartRepository.save(cart);
-            return cart;
+            return cartRepository.save(cart);
         });
     }
 
-    @SuppressWarnings("null")
     @Transactional
     public Cart addToCart(Long userId, Product product, int quantity) {
         Cart cart = getOrCreateCart(userId);
@@ -55,16 +50,14 @@ public class CartService {
             cart.getCartItems().add(newItem);
             cartItemRepository.save(newItem);
         }
-        return cartRepository.findByUserIdWithItems(userId).orElse(cart);
+        return cartRepository.findById(cart.getId()).orElse(cart);
     }
 
-    @SuppressWarnings("null")
     @Transactional
     public void removeFromCart(Long cartItemId) {
         cartItemRepository.deleteById(cartItemId);
     }
 
-    @SuppressWarnings("null")
     @Transactional
     public Cart updateQuantity(Long cartItemId, int quantity) {
         CartItem item = cartItemRepository.findById(cartItemId)

@@ -46,7 +46,6 @@ public class UserService {
     }
 
     public Optional<User> findById(Long id) {
-        if (id == null) return Optional.empty();
         return userRepository.findById(id);
     }
 
@@ -56,12 +55,6 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    // Used by CustomerController after profile update — persists changed fields
-    @SuppressWarnings("null")
-    public User save(User user) {
-        return userRepository.save(user);
     }
 
     public long getTotalCustomers() {
