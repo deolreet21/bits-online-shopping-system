@@ -55,7 +55,6 @@ public class OrderService {
         }
 
         order.setTotalAmount(total);
-        @SuppressWarnings("null")
         Order savedOrder = orderRepository.save(order);
 
         // Clear the cart after order placement
@@ -63,7 +62,6 @@ public class OrderService {
         return savedOrder;
     }
 
-    @SuppressWarnings("null")
     @Transactional
     public Order cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
@@ -80,16 +78,13 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.CANCELLED);
-        @SuppressWarnings("null")
-        Order cancelled = orderRepository.save(order);
-        return cancelled;
+        return orderRepository.save(order);
     }
 
     public List<Order> getUserOrders(Long userId) {
         return orderRepository.findByUserIdOrderByOrderDateDesc(userId);
     }
 
-    @SuppressWarnings("null")
     public Optional<Order> getOrderById(Long orderId) {
         return orderRepository.findById(orderId);
     }
