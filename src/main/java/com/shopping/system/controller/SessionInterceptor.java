@@ -12,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Component
 public class SessionInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 
-    @SuppressWarnings("null")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String uri = request.getRequestURI();
@@ -32,7 +31,6 @@ public class SessionInterceptor implements HandlerInterceptor, WebMvcConfigurer 
         return true;
     }
 
-    @SuppressWarnings("null")
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(this)
