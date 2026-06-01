@@ -1,40 +1,35 @@
-// Owner: Mehwish | Admin Dashboard | Admin dashboard controller — reads stats via DashboardService
+// Owner: Mehwish | Admin Dashboard | Displays admin dashboard metrics using DashboardService
 package com.shopping.system.controller;
 
 import com.shopping.system.entity.User;
 import com.shopping.system.entity.UserRole;
 import com.shopping.system.service.DashboardService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
 
-    private final DashboardService dashboardService;
+    @Autowired
+    private DashboardService dashboardService;
 
-    public AdminController(DashboardService dashboardService) {
-        this.dashboardService = dashboardService;
-    }
-
-    @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model) {
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(Model model, HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
-        if (user == null || user.getRole() != UserRole.ADMIN) {
-            return "redirect:/login";
-        }
+        if (user == null) return "redirect:/login";
+        if (user.getRole() != UserRole.ADMIN) return "redirect:/customer/dashboard";
 
-        // All data fetched via DashboardService — no writes, no @Transactional needed
+        model.addAttribute("currentUser", user);
         model.addAttribute("totalProducts", dashboardService.getTotalProducts());
-        model.addAttribute("totalOrders",   dashboardService.getTotalOrders());
+        model.addAttribute("totalOrders", dashboardService.getTotalOrders());
         model.addAttribute("totalCustomers", dashboardService.getTotalCustomers());
-        model.addAttribute("todaySales",    dashboardService.getTodaySales());
+        model.addAttribute("todaysSales", dashboardService.getTodaysSales());
         model.addAttribute("lowStockProducts", dashboardService.getLowStockProducts());
-        model.addAttribute("loggedInUser",  user);
-
+        model.addAttribute("recentOrders", dashboardService.getRecentOrders());
+        model.addAttribute("recentFeedback", dashboardService.getRecentFeedback());
         return "admin/dashboard";
     }
 }
