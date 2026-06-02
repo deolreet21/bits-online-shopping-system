@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -20,18 +21,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUserId(Long userId);
 
     List<Order> findByUserIdOrderByOrderDateDesc(Long userId);
-
-    // Eagerly load user + orderItems + products for single-order detail / cancel pages
-    @Query("SELECT o FROM Order o JOIN FETCH o.user LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.product WHERE o.id = :id")
-    Optional<Order> findByIdWithDetails(@Param("id") Long id);
-
-    // User order history — load user + items so templates can call .size() and .user.username
-    @Query("SELECT DISTINCT o FROM Order o JOIN FETCH o.user LEFT JOIN FETCH o.orderItems WHERE o.user.id = :userId ORDER BY o.orderDate DESC")
-    List<Order> findUserOrdersWithItems(@Param("userId") Long userId);
-
-    // Admin: all orders with user + items
-    @Query("SELECT DISTINCT o FROM Order o JOIN FETCH o.user LEFT JOIN FETCH o.orderItems ORDER BY o.orderDate DESC")
-    List<Order> findAllOrdersWithItems();
 
     // Eagerly load user + orderItems + products for single-order detail / cancel pages
     @Query("SELECT o FROM Order o JOIN FETCH o.user LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.product WHERE o.id = :id")
