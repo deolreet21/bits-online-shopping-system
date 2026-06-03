@@ -1,0 +1,29 @@
+meta {
+  name: GET /admin/reports/sales — date range
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/admin/reports/sales?from=2026-05-01&to=2026-05-31
+  body: none
+  auth: inherit
+}
+
+params:query {
+  from: 2026-05-01
+  to: 2026-05-31
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Sales report for a specific date range (ISO dates). Returns orders, totalOrderCount, totalRevenue, avgOrderValue.
+  Access: ADMIN
+}

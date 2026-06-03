@@ -1,0 +1,28 @@
+meta {
+  name: GET /products — keyword search
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/products?keyword=mouse
+  body: none
+  auth: inherit
+}
+
+params:query {
+  keyword: mouse
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Search products by name (case-insensitive substring match).
+  Access: CUSTOMER
+}

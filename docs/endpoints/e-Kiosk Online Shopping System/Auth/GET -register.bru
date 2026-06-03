@@ -1,0 +1,21 @@
+meta {
+  name: GET /register
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/register
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Renders the registration form. Redirects to / if already logged in.
+  Access: PUBLIC
+  Output: register.html
+}

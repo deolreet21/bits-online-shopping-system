@@ -1,0 +1,26 @@
+meta {
+  name: POST /orders/{id}/cancel
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/orders/7/cancel
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Cancels the order — sets status to CANCELLED and restores inventory quantities.
+  Access: CUSTOMER (own) / ADMIN
+  Success: 302 → /orders/{id} with flash success
+  Failure: 302 → /orders/{id} with flash error
+}

@@ -1,0 +1,25 @@
+meta {
+  name: POST /admin/products/delete/{id}
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/admin/products/delete/12
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Delete a product by ID. Will fail with DB constraint error if product is referenced by order items or feedback.
+  Access: ADMIN
+  Success: 302 → /admin/products
+}

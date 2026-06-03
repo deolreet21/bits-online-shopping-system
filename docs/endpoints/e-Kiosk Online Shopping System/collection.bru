@@ -1,0 +1,25 @@
+meta {
+  name: e-Kiosk Online Shopping System
+}
+
+auth {
+  mode: none
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:8080
+  sessionId: 
+}
+
+docs {
+  Complete API collection for the BITS e-Kiosk project.
+  
+  Base URL: http://localhost:8080
+  
+  Auth: Session cookie (JSESSIONID). Run 'POST /login' first — the cookie is set automatically in Bruno from the Set-Cookie response header.
+  
+  Access levels:
+    PUBLIC   = no login required
+    CUSTOMER = any logged-in user
+    ADMIN    = role must be ADMIN
+}

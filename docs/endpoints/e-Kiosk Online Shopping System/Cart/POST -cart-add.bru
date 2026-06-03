@@ -1,0 +1,32 @@
+meta {
+  name: POST /cart/add
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/cart/add
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  productId: 3
+  quantity: 2
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Add a product to the cart. Validates stock — rejects if out of stock or qty exceeds available. If already in cart, increments quantity.
+  Access: CUSTOMER
+  Success: 302 → /cart
+  Failure: 302 → /products/{id} with flash error
+}

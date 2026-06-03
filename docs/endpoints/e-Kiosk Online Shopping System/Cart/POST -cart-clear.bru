@@ -1,0 +1,25 @@
+meta {
+  name: POST /cart/clear
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/cart/clear
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Empty the entire cart. Cart row is kept; only CartItems are deleted via orphanRemoval.
+  Access: CUSTOMER
+  Output: 302 → /cart
+}

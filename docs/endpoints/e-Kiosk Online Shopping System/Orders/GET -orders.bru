@@ -1,0 +1,25 @@
+meta {
+  name: GET /orders
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/orders
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Order history. CUSTOMERs see own orders only. ADMINs see all orders sorted newest-first.
+  Access: CUSTOMER / ADMIN
+  Output: orders/history.html
+}

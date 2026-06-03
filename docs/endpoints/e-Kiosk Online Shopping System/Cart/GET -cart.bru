@@ -1,0 +1,25 @@
+meta {
+  name: GET /cart
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/cart
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  View current user's cart. Creates empty cart if none exists. Shows items, quantities, subtotals, grand total.
+  Access: CUSTOMER
+  Output: cart/cart.html
+}

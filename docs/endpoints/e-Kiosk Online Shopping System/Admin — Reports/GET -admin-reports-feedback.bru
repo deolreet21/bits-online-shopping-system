@@ -1,0 +1,24 @@
+meta {
+  name: GET /admin/reports/feedback
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/admin/reports/feedback
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Full feedback report — all entries sorted newest-first. Renders admin/feedback.html.
+  Access: ADMIN
+}

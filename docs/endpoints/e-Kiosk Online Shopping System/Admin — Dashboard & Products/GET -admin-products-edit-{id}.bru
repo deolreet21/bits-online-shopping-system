@@ -1,0 +1,25 @@
+meta {
+  name: GET /admin/products/edit/{id}
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/admin/products/edit/3
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Load edit form pre-filled with existing product data.
+  Access: ADMIN
+  Output: admin/products/edit.html
+}

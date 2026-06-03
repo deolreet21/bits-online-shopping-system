@@ -1,0 +1,25 @@
+meta {
+  name: GET /feedback
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/feedback
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Feedback form page. Loads all products for the optional product dropdown and the user's own past submissions.
+  Access: CUSTOMER
+  Output: feedback/form.html with products and myFeedback list
+}

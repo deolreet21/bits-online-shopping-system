@@ -1,0 +1,1105 @@
+{
+  "info": {
+    "name": "e-Kiosk Online Shopping System",
+    "description": "Complete API collection for the BITS e-Kiosk project.\n\nBase URL: http://localhost:8080\n\nAuth: Session cookie (JSESSIONID). Run 'POST /login' first — the cookie is set automatically in Bruno from the Set-Cookie response header.\n\nAccess levels:\n  PUBLIC   = no login required\n  CUSTOMER = any logged-in user\n  ADMIN    = role must be ADMIN",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "",
+      "type": "string",
+      "description": "Paste JSESSIONID value from the Set-Cookie header after running POST /login"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "GET / (root redirect)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Root redirect. No session → /login. ADMIN → /admin/dashboard. CUSTOMER → /customer/dashboard.\nAccess: PUBLIC"
+          }
+        },
+        {
+          "name": "GET /login",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["login"]
+            },
+            "description": "Renders the login form. Already logged-in users are redirected to their dashboard.\nAccess: PUBLIC\nOutput: login.html"
+          }
+        },
+        {
+          "name": "POST /login — as admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "admin", "type": "text" },
+                { "key": "password", "value": "admin123", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["login"]
+            },
+            "description": "Authenticates the user. On success sets JSESSIONID cookie and redirects to /admin/dashboard.\nAccess: PUBLIC\nOutput: 302 redirect"
+          }
+        },
+        {
+          "name": "POST /login — as customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "alice", "type": "text" },
+                { "key": "password", "value": "password123", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["login"]
+            },
+            "description": "Authenticates as customer. On success sets JSESSIONID cookie and redirects to /customer/dashboard.\nAccess: PUBLIC\nOutput: 302 redirect"
+          }
+        },
+        {
+          "name": "GET /register",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["register"]
+            },
+            "description": "Renders the registration form. Redirects to / if already logged in.\nAccess: PUBLIC\nOutput: register.html"
+          }
+        },
+        {
+          "name": "POST /register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "riya", "type": "text" },
+                { "key": "email", "value": "riya@example.com", "type": "text" },
+                { "key": "password", "value": "riya1234", "type": "text" },
+                { "key": "confirmPassword", "value": "riya1234", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["register"]
+            },
+            "description": "Creates a new CUSTOMER account. Validates: passwords match, password >= 6 chars, username/email unique. BCrypt-hashes password before saving.\nAccess: PUBLIC\nSuccess: 302 → /login\nFailure: 302 → /register with flash error"
+          }
+        },
+        {
+          "name": "GET /logout",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["logout"]
+            },
+            "description": "Invalidates the HttpSession. Clears all session data.\nAccess: CUSTOMER\nOutput: 302 → /login with flash success"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "item": [
+        {
+          "name": "GET /customer/dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customer/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["customer", "dashboard"]
+            },
+            "description": "Customer home page. Shows cartCount, totalOrders, last 5 orders. ADMINs are redirected to /admin/dashboard.\nAccess: CUSTOMER\nOutput: customer/dashboard.html"
+          }
+        },
+        {
+          "name": "GET /customer/profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customer/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["customer", "profile"]
+            },
+            "description": "View own profile — username, email, orderCount, feedbackCount, cartCount.\nAccess: CUSTOMER\nOutput: customer/profile.html"
+          }
+        },
+        {
+          "name": "POST /customer/profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "alice_updated", "type": "text" },
+                { "key": "email", "value": "alice@example.com", "type": "text" },
+                { "key": "newPassword", "value": "", "type": "text", "description": "Leave blank to keep current password" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customer/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["customer", "profile"]
+            },
+            "description": "Update own username, email, and optionally password. Validates uniqueness. Updates session object after save.\nAccess: CUSTOMER\nSuccess: 302 → /customer/profile with flash successMessage\nFailure: 302 → /customer/profile with flash errorMessage"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "GET /products — all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            },
+            "description": "Browse all products.\nAccess: CUSTOMER\nOutput: products/list.html with products list, categories"
+          }
+        },
+        {
+          "name": "GET /products — keyword search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products?keyword=mouse",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "keyword", "value": "mouse" }
+              ]
+            },
+            "description": "Search products by name (case-insensitive substring match).\nAccess: CUSTOMER"
+          }
+        },
+        {
+          "name": "GET /products — category filter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products?category=ELECTRONICS",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "category", "value": "ELECTRONICS", "description": "One of: ELECTRONICS, ELECTRICAL, FURNITURE, COSMETICS, TOYS, BOOKS" }
+              ]
+            },
+            "description": "Filter products by category.\nAccess: CUSTOMER"
+          }
+        },
+        {
+          "name": "GET /products — keyword + category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products?keyword=lamp&category=ELECTRICAL",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "keyword", "value": "lamp" },
+                { "key": "category", "value": "ELECTRICAL" }
+              ]
+            },
+            "description": "Combined keyword + category filter.\nAccess: CUSTOMER"
+          }
+        },
+        {
+          "name": "GET /products/search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/search?keyword=chair",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "search"],
+              "query": [
+                { "key": "keyword", "value": "chair" }
+              ]
+            },
+            "description": "Alias for GET /products — delegates to the same handler.\nAccess: CUSTOMER"
+          }
+        },
+        {
+          "name": "GET /products/category/{category}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/category/FURNITURE",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "category", "FURNITURE"]
+            },
+            "description": "Filter by category via path variable. Categories: ELECTRONICS, ELECTRICAL, FURNITURE, COSMETICS, TOYS, BOOKS.\nAccess: CUSTOMER"
+          }
+        },
+        {
+          "name": "GET /products/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "1"]
+            },
+            "description": "Product detail page — name, description, price, stock, category. Includes add-to-cart form.\nAccess: CUSTOMER\nOutput: products/detail.html"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "GET /cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart"]
+            },
+            "description": "View current user's cart. Creates empty cart if none exists. Shows items, quantities, subtotals, grand total.\nAccess: CUSTOMER\nOutput: cart/cart.html"
+          }
+        },
+        {
+          "name": "POST /cart/add",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "productId", "value": "3", "type": "text" },
+                { "key": "quantity", "value": "2", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "add"]
+            },
+            "description": "Add a product to the cart. Validates stock — rejects if out of stock or qty exceeds available. If already in cart, increments quantity.\nAccess: CUSTOMER\nSuccess: 302 → /cart\nFailure: 302 → /products/{id} with flash error"
+          }
+        },
+        {
+          "name": "POST /cart/update",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "cartItemId", "value": "5", "type": "text" },
+                { "key": "quantity", "value": "3", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "update"]
+            },
+            "description": "Change the quantity of an existing cart item.\nAccess: CUSTOMER\nOutput: 302 → /cart"
+          }
+        },
+        {
+          "name": "POST /cart/remove/{itemId}",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/remove/5",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "remove", "5"]
+            },
+            "description": "Remove a single item from the cart by cart-item ID (not product ID).\nAccess: CUSTOMER\nOutput: 302 → /cart"
+          }
+        },
+        {
+          "name": "POST /cart/clear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/clear",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "clear"]
+            },
+            "description": "Empty the entire cart. Cart row is kept; only CartItems are deleted via orphanRemoval.\nAccess: CUSTOMER\nOutput: 302 → /cart"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "POST /orders/place",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "shippingAddress", "value": "42 MG Road, Bengaluru, Karnataka 560001", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/place",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "place"]
+            },
+            "description": "Place order from cart. Atomically: validates stock, deducts inventory, creates Order + OrderItems, clears cart, sends async confirmation email. Requires non-empty cart and non-blank shippingAddress.\nAccess: CUSTOMER\nSuccess: 302 → /orders/{newOrderId}\nFailure: 302 → /cart with flash error"
+          }
+        },
+        {
+          "name": "GET /orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            },
+            "description": "Order history. CUSTOMERs see own orders only. ADMINs see all orders sorted newest-first.\nAccess: CUSTOMER / ADMIN\nOutput: orders/history.html"
+          }
+        },
+        {
+          "name": "GET /orders/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/7",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "7"]
+            },
+            "description": "Full order detail — items, quantities, prices, subtotals, total, status, shipping address. CUSTOMERs can only view their own orders.\nAccess: CUSTOMER (own) / ADMIN\nOutput: orders/details.html with order and canCancel flag"
+          }
+        },
+        {
+          "name": "GET /orders/{id}/cancel",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/7/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "7", "cancel"]
+            },
+            "description": "Cancellation confirmation page. If order is not cancellable (already shipped/delivered/cancelled), redirects back to order detail instead.\nAccess: CUSTOMER (own) / ADMIN\nOutput: orders/cancel-confirm.html"
+          }
+        },
+        {
+          "name": "POST /orders/{id}/cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/7/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "7", "cancel"]
+            },
+            "description": "Cancels the order — sets status to CANCELLED and restores inventory quantities.\nAccess: CUSTOMER (own) / ADMIN\nSuccess: 302 → /orders/{id} with flash success\nFailure: 302 → /orders/{id} with flash error"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feedback",
+      "item": [
+        {
+          "name": "GET /feedback",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["feedback"]
+            },
+            "description": "Feedback form page. Loads all products for the optional product dropdown and the user's own past submissions.\nAccess: CUSTOMER\nOutput: feedback/form.html with products and myFeedback list"
+          }
+        },
+        {
+          "name": "POST /feedback — for product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "productId", "value": "3", "type": "text" },
+                { "key": "rating", "value": "5", "type": "text" },
+                { "key": "comment", "value": "Excellent quality, fast delivery!", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["feedback"]
+            },
+            "description": "Submit product-specific feedback. rating must be 1-5. feedbackDate set by @PrePersist.\nAccess: CUSTOMER\nSuccess: 302 → /feedback with flash success"
+          }
+        },
+        {
+          "name": "POST /feedback — general (no product)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "rating", "value": "4", "type": "text" },
+                { "key": "comment", "value": "Great shopping experience overall.", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["feedback"]
+            },
+            "description": "Submit general store feedback (no product linked). productId omitted → feedback.product = null.\nAccess: CUSTOMER\nSuccess: 302 → /feedback with flash success"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Dashboard & Products",
+      "item": [
+        {
+          "name": "GET /admin/dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "dashboard"]
+            },
+            "description": "Admin home. Shows: totalProducts, totalOrders, totalCustomers, todaysSales, lowStockProducts (qty < 5), last 10 orders, last 5 feedback entries.\nAccess: ADMIN\nOutput: admin/dashboard.html"
+          }
+        },
+        {
+          "name": "GET /admin/products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products"]
+            },
+            "description": "List all products — name, category, price, stock. Links to edit/delete each.\nAccess: ADMIN\nOutput: admin/products/list.html"
+          }
+        },
+        {
+          "name": "GET /admin/products/add",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", "add"]
+            },
+            "description": "Renders add-product form with blank Product object and all Category enum values for the dropdown.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "POST /admin/products/add",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "name", "value": "Mechanical Keyboard", "type": "text" },
+                { "key": "description", "value": "RGB backlit, tactile switches", "type": "text" },
+                { "key": "price", "value": "1299.00", "type": "text" },
+                { "key": "quantityOnHand", "value": "30", "type": "text" },
+                { "key": "category", "value": "ELECTRONICS", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", "add"]
+            },
+            "description": "Create a new product. @PrePersist sets createdDate and updatedDate automatically.\nAccess: ADMIN\nSuccess: 302 → /admin/products with flash success"
+          }
+        },
+        {
+          "name": "GET /admin/products/edit/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/edit/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", "edit", "3"]
+            },
+            "description": "Load edit form pre-filled with existing product data.\nAccess: ADMIN\nOutput: admin/products/edit.html"
+          }
+        },
+        {
+          "name": "POST /admin/products/edit/{id}",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "name", "value": "Wireless Mouse Pro", "type": "text" },
+                { "key": "description", "value": "Ergonomic, 2.4GHz, DPI adjustable", "type": "text" },
+                { "key": "price", "value": "899.00", "type": "text" },
+                { "key": "quantityOnHand", "value": "45", "type": "text" },
+                { "key": "category", "value": "ELECTRONICS", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/edit/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", "edit", "3"]
+            },
+            "description": "Update existing product. Re-fetches managed entity from DB and copies new values → ensures JPA UPDATE not INSERT. @PreUpdate refreshes updatedDate.\nAccess: ADMIN\nSuccess: 302 → /admin/products"
+          }
+        },
+        {
+          "name": "POST /admin/products/delete/{id}",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/delete/12",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", "delete", "12"]
+            },
+            "description": "Delete a product by ID. Will fail with DB constraint error if product is referenced by order items or feedback.\nAccess: ADMIN\nSuccess: 302 → /admin/products"
+          }
+        },
+        {
+          "name": "GET /admin/feedback",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "feedback"]
+            },
+            "description": "All customer feedback across all users and products, sorted newest-first.\nAccess: ADMIN\nOutput: admin/feedback.html with feedbackList"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Sales Analytics",
+      "item": [
+        {
+          "name": "GET /admin/sales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/sales",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sales"]
+            },
+            "description": "Full sales analytics dashboard — all four period totals, fast-moving top-10, slow-moving bottom-10 (including never-ordered), revenue by category.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/sales/weekly",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/sales/weekly",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sales", "weekly"]
+            },
+            "description": "Revenue total for rolling last-7-days window. Excludes CANCELLED orders.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/sales/monthly",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/sales/monthly",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sales", "monthly"]
+            },
+            "description": "Revenue total for rolling last-30-days window.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/sales/quarterly",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/sales/quarterly",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sales", "quarterly"]
+            },
+            "description": "Revenue total for rolling last-90-days window.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/sales/yearly",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/sales/yearly",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sales", "yearly"]
+            },
+            "description": "Revenue total for rolling last-365-days window.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/sales/products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/sales/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sales", "products"]
+            },
+            "description": "Fast-moving (top 10 by units sold) and slow-moving (bottom 10 + never-ordered) product rankings.\nAccess: ADMIN"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Reports",
+      "item": [
+        {
+          "name": "GET /admin/reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports"]
+            },
+            "description": "Reports hub — navigation page linking to all report types.\nAccess: ADMIN\nOutput: admin/reports/dashboard.html"
+          }
+        },
+        {
+          "name": "GET /admin/reports/sales — last 30 days",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports/sales",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports", "sales"]
+            },
+            "description": "Date-range sales report. Defaults to last 30 days. Returns orders with totalRevenue and avgOrderValue.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/reports/sales — date range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports/sales?from=2026-05-01&to=2026-05-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports", "sales"],
+              "query": [
+                { "key": "from", "value": "2026-05-01", "description": "ISO date YYYY-MM-DD" },
+                { "key": "to", "value": "2026-05-31", "description": "ISO date YYYY-MM-DD" }
+              ]
+            },
+            "description": "Sales report for a specific date range (ISO dates). Returns orders, totalOrderCount, totalRevenue, avgOrderValue.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/reports/products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports", "products"]
+            },
+            "description": "Full product listing report — name, category, price, stock quantity.\nAccess: ADMIN\nOutput: admin/reports/inventory.html"
+          }
+        },
+        {
+          "name": "GET /admin/reports/customers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports", "customers"]
+            },
+            "description": "All CUSTOMER accounts with their order count. Shows totalCustomers and activeCustomers (those with at least 1 order).\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/reports/feedback",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports", "feedback"]
+            },
+            "description": "Full feedback report — all entries sorted newest-first. Renders admin/feedback.html.\nAccess: ADMIN"
+          }
+        },
+        {
+          "name": "GET /admin/reports/inventory",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "JSESSIONID={{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports/inventory",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports", "inventory"]
+            },
+            "description": "Inventory levels report — all products with current quantityOnHand. Dashboard auto-highlights qty < 5.\nAccess: ADMIN"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+meta {
+  name: GET /admin/reports/sales — last 30 days
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/admin/reports/sales
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Date-range sales report. Defaults to last 30 days. Returns orders with totalRevenue and avgOrderValue.
+  Access: ADMIN
+}

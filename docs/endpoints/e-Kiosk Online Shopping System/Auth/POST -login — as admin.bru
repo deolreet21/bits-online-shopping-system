@@ -1,0 +1,30 @@
+meta {
+  name: POST /login — as admin
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:form-urlencoded {
+  username: admin
+  password: admin123
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Authenticates the user. On success sets JSESSIONID cookie and redirects to /admin/dashboard.
+  Access: PUBLIC
+  Output: 302 redirect
+}

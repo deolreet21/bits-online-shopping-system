@@ -1,0 +1,31 @@
+meta {
+  name: POST /orders/place
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/orders/place
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  shippingAddress: 42 MG Road, Bengaluru, Karnataka 560001
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Place order from cart. Atomically: validates stock, deducts inventory, creates Order + OrderItems, clears cart, sends async confirmation email. Requires non-empty cart and non-blank shippingAddress.
+  Access: CUSTOMER
+  Success: 302 → /orders/{newOrderId}
+  Failure: 302 → /cart with flash error
+}

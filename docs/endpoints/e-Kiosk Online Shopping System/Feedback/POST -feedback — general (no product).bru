@@ -1,0 +1,31 @@
+meta {
+  name: POST /feedback — general (no product)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/feedback
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  rating: 4
+  comment: Great shopping experience overall.
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Submit general store feedback (no product linked). productId omitted → feedback.product = null.
+  Access: CUSTOMER
+  Success: 302 → /feedback with flash success
+}

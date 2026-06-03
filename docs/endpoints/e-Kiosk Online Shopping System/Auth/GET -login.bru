@@ -1,0 +1,21 @@
+meta {
+  name: GET /login
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/login
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Renders the login form. Already logged-in users are redirected to their dashboard.
+  Access: PUBLIC
+  Output: login.html
+}

@@ -1,0 +1,34 @@
+meta {
+  name: POST /admin/products/edit/{id}
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/admin/products/edit/3
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  name: Wireless Mouse Pro
+  description: Ergonomic, 2.4GHz, DPI adjustable
+  price: 899.00
+  quantityOnHand: 45
+  category: ELECTRONICS
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Update existing product. Re-fetches managed entity from DB and copies new values → ensures JPA UPDATE not INSERT. @PreUpdate refreshes updatedDate.
+  Access: ADMIN
+  Success: 302 → /admin/products
+}

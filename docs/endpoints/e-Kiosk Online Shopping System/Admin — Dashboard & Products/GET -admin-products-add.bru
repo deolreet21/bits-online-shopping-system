@@ -1,0 +1,24 @@
+meta {
+  name: GET /admin/products/add
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/admin/products/add
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Renders add-product form with blank Product object and all Category enum values for the dropdown.
+  Access: ADMIN
+}

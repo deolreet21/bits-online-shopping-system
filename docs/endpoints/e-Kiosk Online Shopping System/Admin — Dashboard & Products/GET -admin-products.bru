@@ -1,0 +1,25 @@
+meta {
+  name: GET /admin/products
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/admin/products
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  List all products — name, category, price, stock. Links to edit/delete each.
+  Access: ADMIN
+  Output: admin/products/list.html
+}

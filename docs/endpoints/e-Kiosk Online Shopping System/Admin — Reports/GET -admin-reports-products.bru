@@ -1,0 +1,25 @@
+meta {
+  name: GET /admin/reports/products
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/admin/reports/products
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Full product listing report — name, category, price, stock quantity.
+  Access: ADMIN
+  Output: admin/reports/inventory.html
+}

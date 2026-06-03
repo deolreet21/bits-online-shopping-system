@@ -1,0 +1,34 @@
+meta {
+  name: POST /admin/products/add
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/admin/products/add
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  name: Mechanical Keyboard
+  description: RGB backlit, tactile switches
+  price: 1299.00
+  quantityOnHand: 30
+  category: ELECTRONICS
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Create a new product. @PrePersist sets createdDate and updatedDate automatically.
+  Access: ADMIN
+  Success: 302 → /admin/products with flash success
+}

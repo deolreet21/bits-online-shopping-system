@@ -1,0 +1,25 @@
+meta {
+  name: GET /orders/{id}/cancel
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/orders/7/cancel
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Cancellation confirmation page. If order is not cancellable (already shipped/delivered/cancelled), redirects back to order detail instead.
+  Access: CUSTOMER (own) / ADMIN
+  Output: orders/cancel-confirm.html
+}

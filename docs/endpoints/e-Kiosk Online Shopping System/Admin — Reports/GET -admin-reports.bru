@@ -1,0 +1,25 @@
+meta {
+  name: GET /admin/reports
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/admin/reports
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Reports hub — navigation page linking to all report types.
+  Access: ADMIN
+  Output: admin/reports/dashboard.html
+}

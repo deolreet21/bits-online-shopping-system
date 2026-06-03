@@ -1,0 +1,24 @@
+meta {
+  name: GET /products/category/{category}
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/products/category/FURNITURE
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Filter by category via path variable. Categories: ELECTRONICS, ELECTRICAL, FURNITURE, COSMETICS, TOYS, BOOKS.
+  Access: CUSTOMER
+}

@@ -1,0 +1,28 @@
+meta {
+  name: GET /products/search
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/products/search?keyword=chair
+  body: none
+  auth: inherit
+}
+
+params:query {
+  keyword: chair
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Alias for GET /products — delegates to the same handler.
+  Access: CUSTOMER
+}

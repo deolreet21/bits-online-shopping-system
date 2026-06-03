@@ -1,0 +1,24 @@
+meta {
+  name: GET /admin/sales/weekly
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/admin/sales/weekly
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Revenue total for rolling last-7-days window. Excludes CANCELLED orders.
+  Access: ADMIN
+}

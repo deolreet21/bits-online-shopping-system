@@ -1,0 +1,25 @@
+meta {
+  name: GET /logout
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/logout
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Invalidates the HttpSession. Clears all session data.
+  Access: CUSTOMER
+  Output: 302 → /login with flash success
+}

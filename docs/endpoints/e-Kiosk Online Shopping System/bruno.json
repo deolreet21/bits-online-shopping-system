@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "e-Kiosk Online Shopping System",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

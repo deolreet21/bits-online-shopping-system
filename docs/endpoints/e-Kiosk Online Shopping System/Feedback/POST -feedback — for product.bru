@@ -1,0 +1,32 @@
+meta {
+  name: POST /feedback — for product
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/feedback
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  productId: 3
+  rating: 5
+  comment: Excellent quality, fast delivery!
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Submit product-specific feedback. rating must be 1-5. feedbackDate set by @PrePersist.
+  Access: CUSTOMER
+  Success: 302 → /feedback with flash success
+}

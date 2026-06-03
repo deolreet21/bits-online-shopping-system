@@ -1,0 +1,33 @@
+meta {
+  name: POST /register
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/register
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:form-urlencoded {
+  username: riya
+  email: riya@example.com
+  password: riya1234
+  confirmPassword: riya1234
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Creates a new CUSTOMER account. Validates: passwords match, password >= 6 chars, username/email unique. BCrypt-hashes password before saving.
+  Access: PUBLIC
+  Success: 302 → /login
+  Failure: 302 → /register with flash error
+}

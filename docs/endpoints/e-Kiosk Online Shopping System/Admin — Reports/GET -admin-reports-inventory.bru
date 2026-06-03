@@ -1,0 +1,24 @@
+meta {
+  name: GET /admin/reports/inventory
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/admin/reports/inventory
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Inventory levels report — all products with current quantityOnHand. Dashboard auto-highlights qty < 5.
+  Access: ADMIN
+}

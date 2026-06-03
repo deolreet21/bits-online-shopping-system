@@ -1,0 +1,25 @@
+meta {
+  name: GET /admin/feedback
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/admin/feedback
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  All customer feedback across all users and products, sorted newest-first.
+  Access: ADMIN
+  Output: admin/feedback.html with feedbackList
+}

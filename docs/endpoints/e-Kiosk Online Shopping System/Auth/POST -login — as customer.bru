@@ -1,0 +1,30 @@
+meta {
+  name: POST /login — as customer
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:form-urlencoded {
+  username: alice
+  password: password123
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Authenticates as customer. On success sets JSESSIONID cookie and redirects to /customer/dashboard.
+  Access: PUBLIC
+  Output: 302 redirect
+}

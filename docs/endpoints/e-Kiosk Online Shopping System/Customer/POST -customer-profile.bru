@@ -1,0 +1,33 @@
+meta {
+  name: POST /customer/profile
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/customer/profile
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  username: alice_updated
+  email: alice@example.com
+  newPassword: 
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Update own username, email, and optionally password. Validates uniqueness. Updates session object after save.
+  Access: CUSTOMER
+  Success: 302 → /customer/profile with flash successMessage
+  Failure: 302 → /customer/profile with flash errorMessage
+}

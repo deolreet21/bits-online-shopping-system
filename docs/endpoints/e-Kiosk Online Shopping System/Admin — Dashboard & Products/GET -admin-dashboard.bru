@@ -1,0 +1,25 @@
+meta {
+  name: GET /admin/dashboard
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/admin/dashboard
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Admin home. Shows: totalProducts, totalOrders, totalCustomers, todaysSales, lowStockProducts (qty < 5), last 10 orders, last 5 feedback entries.
+  Access: ADMIN
+  Output: admin/dashboard.html
+}

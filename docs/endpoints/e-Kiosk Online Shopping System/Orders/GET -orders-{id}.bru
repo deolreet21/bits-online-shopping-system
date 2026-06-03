@@ -1,0 +1,25 @@
+meta {
+  name: GET /orders/{id}
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/orders/7
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Full order detail — items, quantities, prices, subtotals, total, status, shipping address. CUSTOMERs can only view their own orders.
+  Access: CUSTOMER (own) / ADMIN
+  Output: orders/details.html with order and canCancel flag
+}

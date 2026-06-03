@@ -1,0 +1,25 @@
+meta {
+  name: GET /products — all
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/products
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Browse all products.
+  Access: CUSTOMER
+  Output: products/list.html with products list, categories
+}

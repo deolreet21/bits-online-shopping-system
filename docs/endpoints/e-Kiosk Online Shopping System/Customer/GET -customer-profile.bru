@@ -1,0 +1,25 @@
+meta {
+  name: GET /customer/profile
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/customer/profile
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  View own profile — username, email, orderCount, feedbackCount, cartCount.
+  Access: CUSTOMER
+  Output: customer/profile.html
+}

@@ -1,0 +1,28 @@
+meta {
+  name: GET /products — category filter
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/products?category=ELECTRONICS
+  body: none
+  auth: inherit
+}
+
+params:query {
+  category: ELECTRONICS
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Filter products by category.
+  Access: CUSTOMER
+}

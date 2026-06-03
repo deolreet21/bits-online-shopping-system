@@ -1,0 +1,31 @@
+meta {
+  name: POST /cart/update
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/cart/update
+  body: formUrlEncoded
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+body:form-urlencoded {
+  cartItemId: 5
+  quantity: 3
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Change the quantity of an existing cart item.
+  Access: CUSTOMER
+  Output: 302 → /cart
+}

@@ -1,0 +1,25 @@
+meta {
+  name: GET /customer/dashboard
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/customer/dashboard
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Customer home page. Shows cartCount, totalOrders, last 5 orders. ADMINs are redirected to /admin/dashboard.
+  Access: CUSTOMER
+  Output: customer/dashboard.html
+}

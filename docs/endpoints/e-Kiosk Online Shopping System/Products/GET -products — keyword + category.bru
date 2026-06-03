@@ -1,0 +1,29 @@
+meta {
+  name: GET /products — keyword + category
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/products?keyword=lamp&category=ELECTRICAL
+  body: none
+  auth: inherit
+}
+
+params:query {
+  keyword: lamp
+  category: ELECTRICAL
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Combined keyword + category filter.
+  Access: CUSTOMER
+}

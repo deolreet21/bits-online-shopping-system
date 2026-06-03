@@ -1,0 +1,24 @@
+meta {
+  name: GET /admin/sales
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/admin/sales
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Full sales analytics dashboard — all four period totals, fast-moving top-10, slow-moving bottom-10 (including never-ordered), revenue by category.
+  Access: ADMIN
+}

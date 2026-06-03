@@ -1,0 +1,25 @@
+meta {
+  name: POST /cart/remove/{itemId}
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/cart/remove/5
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: JSESSIONID={{sessionId}}
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Remove a single item from the cart by cart-item ID (not product ID).
+  Access: CUSTOMER
+  Output: 302 → /cart
+}
